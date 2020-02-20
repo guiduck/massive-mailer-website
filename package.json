@@ -4,11 +4,13 @@
   "main": "index.js",
   "license": "MIT",
   "dependencies": {
-    "express": "^4.17.1"
+    "express": "^4.17.1",
+    "passport": "^0.4.1",
+    "passport-google-oauth20": "2"
   },
   "engines": {
-    "node": "8.1.1",
-    "yarn": "1.0.0",
+    "node": "12.14.1",
+    "yarn": "1.22.0",
     "npm": "5.0.3"
   },
   "scripts": {
