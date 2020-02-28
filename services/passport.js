@@ -1,6 +1,10 @@
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
+const mongoose = require('mongoose');
 const keys = require('../config/keys');
+
+//this is a mongoose model class and can be used to create an instance
+const User = mongoose.model('users');
 
 //taking passport and saying how it should understand googleStrat
 passport.use(
@@ -11,9 +15,8 @@ passport.use(
       callbackURL: '/auth/google/callback' //the route user gets sent to after granting permition on google
     },
     (accessToken, refreshToken, profile, done) => {
-      console.log('access token:', accessToken);
-      console.log('refresh token:', refreshToken);
-      console.log('profile:', profile);
+      //create instance of user in js and use save() to persist that on the db
+      new User({ googleId: profile.id }).save();
     }
   )
 );
