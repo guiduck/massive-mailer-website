@@ -23,7 +23,8 @@ passport.use(
     {
       clientID: keys.googleClientID,
       clientSecret: keys.googleClientSecret,
-      callbackURL: '/auth/google/callback' //the route user gets sent to after granting permition on google
+      callbackURL: '/auth/google/callback', //the route user gets sent to after granting permition on google
+      proxy: true //this prevents heroku to change https to http for security reasons
     },
     (accessToken, refreshToken, profile, done) => {
       User.findOne({ googleId: profile.id }).then(existingUser => {
