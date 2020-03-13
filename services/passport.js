@@ -1,5 +1,6 @@
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
+const FacebookStrategy = require('passport-facebook').Strategy;
 const mongoose = require('mongoose');
 const keys = require('../config/keys');
 
@@ -34,6 +35,30 @@ passport.use(
         } else {
           //create instance of user in js and use save() to persist that on the db
           new User({ googleId: profile.id })
+            .save()
+            .then(user => done(null, user)); //then cause it is async and should be done after
+        }
+      });
+    }
+  )
+);
+
+passport.use(
+  new FacebookStrategy(
+    {
+      clientID: keys.facebookAppID,
+      clientSecret: keys.facebookAppSecret,
+      callbackURL: '/auth/facebook/callback',
+      proxy: true
+    },
+    (accessToken, refreshToken, profile, done) => {
+      User.findOne({ facebookId: profile.id }).then(existingUser => {
+        if (existingUser) {
+          //we already have an user with that id on our db
+          done(null, existingUser);
+        } else {
+          //create instance of user in js and use save() to persist that on the db
+          new User({ facebookId: profile.id })
             .save()
             .then(user => done(null, user)); //then cause it is async and should be done after
         }
