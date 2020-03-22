@@ -27,18 +27,15 @@ passport.use(
       callbackURL: '/auth/google/callback', //the route user gets sent to after granting permition on google
       proxy: true //this prevents heroku to change https to http for security reasons
     },
-    (accessToken, refreshToken, profile, done) => {
-      User.findOne({ googleId: profile.id }).then(existingUser => {
-        if (existingUser) {
-          //we already have an user with that id on our db
-          done(null, existingUser);
-        } else {
-          //create instance of user in js and use save() to persist that on the db
-          new User({ googleId: profile.id })
-            .save()
-            .then(user => done(null, user)); //then cause it is async and should be done after
-        }
-      });
+    async (accessToken, refreshToken, profile, done) => {
+      const existingUser = await User.findOne({ googleId: profile.id });
+      if (existingUser) {
+        //we already have an user with that id on our db
+        return done(null, existingUser);
+      }
+      //create instance of user in js and use save() to persist that on the db
+      const user = await new User({ googleId: profile.id }).save();
+      done(null, user); //then cause it is async and should be done after
     }
   )
 );
@@ -51,18 +48,16 @@ passport.use(
       callbackURL: '/auth/facebook/callback',
       proxy: true
     },
-    (accessToken, refreshToken, profile, done) => {
-      User.findOne({ facebookId: profile.id }).then(existingUser => {
-        if (existingUser) {
-          //we already have an user with that id on our db
-          done(null, existingUser);
-        } else {
-          //create instance of user in js and use save() to persist that on the db
-          new User({ facebookId: profile.id })
-            .save()
-            .then(user => done(null, user)); //then cause it is async and should be done after
-        }
-      });
+    async (accessToken, refreshToken, profile, done) => {
+      const existingUser = await User.findOne({ facebookId: profile.id });
+
+      if (existingUser) {
+        //we already have an user with that id on our db
+        return done(null, existingUser);
+      }
+      //create instance of user in js and use save() to persist that on the db
+      const user = await new User({ facebookId: profile.id }).save();
+      done(null, user); //then cause it is async and should be done after
     }
   )
 );
