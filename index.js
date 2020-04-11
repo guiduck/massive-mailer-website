@@ -15,7 +15,7 @@ const app = express();
 app.use(
   cookieSession({
     maxAge: 30 * 24 * 60 * 60 * 1000, //time need to be in msecs
-    keys: [keys.cookieKey]
+    keys: [keys.cookieKey],
   })
 );
 app.use(passport.initialize());
@@ -23,6 +23,7 @@ app.use(passport.session());
 
 //the require returns the function in module.exports and we immediatly invoke the function required
 require('./routes/authRoutes')(app);
+require('./routes/billingRoutes')(app);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT);
