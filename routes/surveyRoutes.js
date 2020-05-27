@@ -1,5 +1,5 @@
 const _ = require('lodash');
-const Path = require('path-parser');
+const { Path } = require('path-parser');
 const { URL } = require('url');
 const mongoose = require('mongoose');
 const requireLogin = require('../middlewares/requireLogin');
@@ -11,7 +11,9 @@ const Survey = mongoose.model('surveys');
 
 module.exports = (app) => {
   app.get('/api/surveys', requireLogin, async (req, res) => {
-    const surveys = await Survey.find({ user: req.user.id });
+    const surveys = await Survey.find({ user: req.user.id }).select({
+      recipients: false,
+    });
 
     res.send(surveys);
   });
